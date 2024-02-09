@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Distributor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #list {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        li button {
+            background-color: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        li button:hover {
+            background-color: #c0392b;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+        }
+
+        input[type="submit"] {
+            background-color: #2ecc71;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #27ae60;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>The Distributor</h1>
+    </header>
+
+    <div id="container">
+        <form id="addItemForm">
+            <input type="text" id="itemInput" placeholder="Neuer Artikel hinzufügen" required>
+            <input type="submit" value="Hinzufügen">
+        </form>
+
+        <ul id="list"></ul>
+    </div>
+
+    <script>
+        let shoppingItems = getShoppingItemsFromLocalStorage();
+
+        updateList();
+
+        const addItemForm = document.getElementById('addItemForm');
+        addItemForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            addNewItem();
+        });
+
+        function getShoppingItemsFromLocalStorage() {
+            let items = localStorage.getItem('shoppingItems');
+
+            if (!items) {
+                items = [];
+            } else {
+                items = items.split(',');
+            }
+
+            return items;
+        }
+
+        function addNewItem() {
+            const itemInput = document.getElementById('itemInput');
+            const itemValue = itemInput.value.trim();
+
+            if (itemValue !== '') {
+                shoppingItems.push(itemValue);
+                localStorage.setItem('shoppingItems', shoppingItems);
+                updateList();
+                itemInput.value = '';
+            }
+        }
+
+        function removeItem(itemIndex) {
+            shoppingItems.splice(itemIndex, 1);
+            localStorage.setItem('shoppingItems', shoppingItems);
+            updateList();
+        }
+
+        function updateList() {
+            const listElement = document.getElementById('list');
+            listElement.innerHTML = '';
+
+            shoppingItems.forEach((item, index) => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <span>${item}</span>
+                    <button onclick="removeItem(${index});">X</button>
+                `;
+                listElement.appendChild(listItem);
+            });
+        }
+    </script>
+</body>
+
+</html>
